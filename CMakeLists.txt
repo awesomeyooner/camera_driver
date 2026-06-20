@@ -8,7 +8,7 @@ endif()
 # In order to compile external libs
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# add_subdirectory()
+add_subdirectory(lib/plib)
 
 # Dependency list
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -47,6 +47,7 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${PROJECT_NAME}_parameters
     rclcpp::rclcpp
+    plib
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

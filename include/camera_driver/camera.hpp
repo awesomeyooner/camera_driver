@@ -12,6 +12,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "plib/util/status.hpp"
+
 
 class Camera
 {
