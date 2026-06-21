@@ -8,6 +8,9 @@ endif()
 # In order to compile external libs
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# The Main Exec Name
+set(MAIN_EXEC camera_driver)
+
 add_subdirectory(lib/plib)
 
 # Dependency list
@@ -34,12 +37,16 @@ generate_parameter_library( ${PROJECT_NAME}_parameters
   src/parameters.yaml
 )
 
-add_library( ${PROJECT_NAME} SHARED
+set(SRC_FILES
     src/main.cpp
 
     src/camera.cpp
     src/core_node.cpp
 )
+
+# Link the dependencies
+add_executable( ${MAIN_EXEC} ${SRC_FILES})
+ament_target_dependencies( ${MAIN_EXEC} PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 ament_target_dependencies(${PROJECT_NAME} PUBLIC
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
@@ -76,6 +83,12 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+# Install Executable
+install(TARGETS
+  ${MAIN_EXEC}
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # Source code
 install(
   DIRECTORY include/
@@ -89,10 +102,10 @@ install(
 # )
 
 # Bringup (yaml configs, launch files)
-# install(
-#   DIRECTORY bringup/launch bringup/config
-#   DESTINATION share/${PROJECT_NAME}
-# )
+install(
+  DIRECTORY bringup/launch bringup/config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 # Whole project
 install(TARGETS ${PROJECT_NAME}

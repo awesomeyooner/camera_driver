@@ -5,6 +5,7 @@ using namespace rclcpp;
 using namespace camera_driver;
 using namespace status_utils;
 using namespace cv;
+using namespace cv_bridge;
 using namespace std;
 
 
@@ -64,3 +65,45 @@ void CoreNode::info(string message)
     RCLCPP_INFO(this->get_logger(), message.c_str());
 
 } // end of "info(string)"
+
+
+void CoreNode::shutdown()
+{
+    m_camera.release();
+
+} // end of "shutdown()"
+
+
+StatusCode CoreNode::publish_data()
+{
+    cv::Mat frame = m_camera.get_frame(m_params.publish_as_gray);
+
+    if(frame.empty())
+        return StatusCode::FAILED;
+
+    std_msgs::msg::Header header = std_msgs::msg::Header();
+        header.stamp = this->now();
+        header.frame_id = m_params.camera_frame_id;
+
+    CvImage cv_image = CvImage(
+        header,
+        m_params.publish_as_gray ? "mono8" : "bgr8",
+        frame
+    );
+    
+    // Raw Image
+    m_image_raw_publisher->publish(*cv_image.toImageMsg());
+
+    // Compressed Image
+    if(m_params.publish_compressed)
+        m_image_compressed_publisher->publish(*cv_image.toCompressedImageMsg(Format::JPEG));
+
+    // Camera Info (I'll do it later)
+    if(m_params.publish_camera_info)
+    {
+        //...
+    }
+
+    return StatusCode::OK;
+
+} // end of "publish_data()"

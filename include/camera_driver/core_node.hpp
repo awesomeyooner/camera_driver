@@ -23,7 +23,7 @@ class CoreNode : public rclcpp::Node
 
         void shutdown();
 
-        void publish_data();
+        status_utils::StatusCode publish_data();
 
     private:
 
