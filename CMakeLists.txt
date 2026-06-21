@@ -38,6 +38,7 @@ add_library( ${PROJECT_NAME} SHARED
     src/main.cpp
 
     src/camera.cpp
+    src/core_node.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} PUBLIC
@@ -55,6 +56,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
   $<INSTALL_INTERFACE:lib/${PROJECT_NAME}>
   /opt/ros/jazzy/include
