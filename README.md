@@ -102,7 +102,7 @@ def generate_launch_description():
     )
 
     nodes = [
-        joystick_launch
+        camera_driver_launch
     ]
 
     return LaunchDescription(nodes)
