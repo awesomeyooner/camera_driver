@@ -5,6 +5,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # In order to compile external libs
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -60,15 +62,27 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
+message("======================================")
+message(${CMAKE_CURRENT_BINARY_DIR})
+message("${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include")
+
 target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
-  $<INSTALL_INTERFACE:lib/${PROJECT_NAME}>
-  /opt/ros/jazzy/include
-  /usr/include/opencv4
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+    $<INSTALL_INTERFACE:lib>
+
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+    # $<BUILD_INTERFACE:/home/ubuntu/Documents/Polar-One/ros2_ws/build/camera_driver/include>
+
+    /opt/ros/jazzy/include
+    /usr/include/opencv4
 )
+
+message("======================================")
+message(STATUS "CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}")
+message(${CMAKE_CURRENT_BINARY_DIR})
+message("${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include")
 
 
 if(BUILD_TESTING)

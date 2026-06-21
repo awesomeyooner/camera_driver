@@ -3,6 +3,7 @@
 #include "camera_driver/core_node.hpp"
 
 
+using namespace status_utils;
 using namespace std;
 
 
@@ -12,9 +13,10 @@ int main(int argc, char** argv)
 
     shared_ptr node = make_shared<CoreNode>();
 
-    node->init();
+    StatusCode init_status = node->init();
 
-    rclcpp::spin(node);
+    if(init_status == StatusCode::OK)
+        rclcpp::spin(node);
 
     node->shutdown();
 

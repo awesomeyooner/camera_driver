@@ -1,13 +1,20 @@
 camera_driver:
   ros__parameters:
-    camera_name: "my_camera"
+
+    camera_name: ""
     camera_frame_id: "my_camera"
     # camera_path: "/dev/v4l/by-path/pci-0000:05:00.3-usb-0:4:1.0-video-index0"
     camera_index: 0
+
     publish_rate: 60.0 # Hz
     publish_as_gray: false
     publish_compressed: true
-    publish_camera_info: true
+    publish_camera_info: false
 
-    resolution: [1280, 960]
-    image_fps: 50
+    flip_horizontally: false
+    flip_vertically: false
+
+    resolution: [1280, 720]
+    image_fps: 30
+
+    configuration_attempts: 10

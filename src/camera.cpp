@@ -75,14 +75,14 @@ void Camera::release()
 } // end of "release()"
 
 
-StatusCode Camera::configure(int width, int height, int fps, int attempts)
+StatusCode Camera::configure(double width, double height, double fps, int attempts)
 {
     return combine_statuses(
         {
             set_property(CAP_PROP_FRAME_WIDTH, width, attempts),
-            set_property(CAP_PROP_FRAME_WIDTH, height, attempts),
-            set_property(CAP_PROP_FRAME_WIDTH, fps, attempts),
-            set_property(CAP_PROP_FRAME_WIDTH, VideoWriter::fourcc('M','J','P','G'), attempts)
+            set_property(CAP_PROP_FRAME_HEIGHT, height, attempts),
+            set_property(CAP_PROP_FPS, fps, attempts),
+            set_property(CAP_PROP_FOURCC, VideoWriter::fourcc('M','J','P','G'), attempts)
         }
     );
 
@@ -120,7 +120,8 @@ Mat Camera::get_frame(bool as_gray)
 
     m_capture_device >> frame;
 
-    if(as_gray)
+    // DON'T convert if the frame is empty
+    if(as_gray && !frame.empty())
         cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
 
     return frame;

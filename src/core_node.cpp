@@ -10,7 +10,7 @@ using namespace std;
 
 
 CoreNode::CoreNode()
-    :   Node("camera_driver_node")
+    :   Node("camera_driver")
 {} // end of "CoreNode()"
 
 
@@ -18,6 +18,8 @@ StatusCode CoreNode::init()
 {
     m_param_listener = std::make_shared<ParamListener>(this);
     m_params = m_param_listener->get_params();
+
+    info("Opening camera...");
 
     if(m_params.camera_path == "unused")
     {
@@ -40,11 +42,24 @@ StatusCode CoreNode::init()
 
     if(width != -1 && height != -1 && fps != -1)
     {
+        info("Attempting to configure settings...");
+
+        // Actually configure the settings
+        m_camera.configure(width, height, fps, m_params.configuration_attempts);
+
+        // Then do one pass to check if they're actually set
         StatusCode configure_status = m_camera.configure(width, height, fps);
-        
+    
         if(configure_status != StatusCode::OK)
+        {
+            info("Failed to configure settings! Exitting...");
             return StatusCode::FAILED;
+        }
+
+        info("Successfully configured settings!");
     }
+
+    info("Creating publishers...");
 
     m_image_raw_publisher = this->create_publisher<sensor_msgs::msg::Image>(m_params.camera_name + "/image_raw", 10);
     m_image_compressed_publisher = this->create_publisher<sensor_msgs::msg::CompressedImage>(m_params.camera_name + "/image_raw/compressed", 10);
@@ -54,6 +69,8 @@ StatusCode CoreNode::init()
         std::chrono::milliseconds(int((1.0 / m_params.publish_rate) * 1000)),
         std::bind(&CoreNode::publish_data, this)
     );
+
+    info("Finished initializing!");
 
     return StatusCode::OK;
 
@@ -80,6 +97,11 @@ StatusCode CoreNode::publish_data()
 
     if(frame.empty())
         return StatusCode::FAILED;
+
+    if(m_params.flip_horizontally)
+        flip(frame, frame, 1);
+    if(m_params.flip_vertically)
+        flip(frame, frame, 0);
 
     std_msgs::msg::Header header = std_msgs::msg::Header();
         header.stamp = this->now();

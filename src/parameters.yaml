@@ -47,6 +47,18 @@ camera_driver:
     description: "Whether or not to publish the camera info"
   }
 
+  flip_horizontally: {
+    type: bool,
+    default_value: false,
+    description: "Whether or not to flip the output image horizontally"
+  }
+
+  flip_vertically: {
+    type: bool,
+    default_value: false,
+    description: "Whether or not to flip the output image vertically"
+  }
+
   resolution: {
     type: int_array,
     default_value: [-1, -1],
@@ -69,4 +81,10 @@ camera_driver:
     type: int,
     default_value: -1,
     description: "FPS of the camera to set"
+  }
+
+  configuration_attempts: {
+    type: int,
+    default_value: 1,
+    description: "The number of times to attempt to configure the given resolution and FPS settings before quitting"
   }

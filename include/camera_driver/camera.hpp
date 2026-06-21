@@ -87,13 +87,13 @@ class Camera
         /**
          * @brief Configure basic camera properties
          * 
-         * @param width `int` Resolution width in pixels
-         * @param height `int` Resolution height in pixels
-         * @param fps `int` Frames per second
+         * @param width `double` Resolution width in pixels
+         * @param height `double` Resolution height in pixels
+         * @param fps `double` Frames per second
          * @param attempts `int = 1` The number of attempts to try to set each property
          * @return `status_utils::StatusCode` `OK` if all successful. `FAILED` otherwise 
          */
-        status_utils::StatusCode configure(int width, int height, int fps, int attempts = 1);
+        status_utils::StatusCode configure(double width, double height, double fps, int attempts = 1);
 
         /**
          * @brief Get the value of the specified property
